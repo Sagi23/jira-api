@@ -20,7 +20,10 @@ def get_total_issues(jql, headers, BASE_URL, NO_RESULT_SEARCH):
     response_json = json.loads(response.text)
     return response_json['total']
 
-
+@app.route('/')
+def hello():
+    print('///////')
+    return jsonify({"messeage": "hello"})
 
 @app.route('/jira/issue/<issue_id>', methods=['GET'])
 def jira_issue(issue_id):
