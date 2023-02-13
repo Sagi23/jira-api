@@ -40,7 +40,6 @@ def jira_issue(issue_id):
 
     # Send the API request
     response = requests.get(f'{BASE_URL}/issue/{issue_id}', headers=headers)
-
     string_data = response.content.decode("utf-8")
 
     # Return the response
@@ -68,8 +67,6 @@ def jira_jql(project_id):
     response = requests.get(f'{BASE_URL}/search/?jql=project={project_id}&startAt={(page - 1) * ITEMS_PER_PAGE}&maxResults={ITEMS_PER_PAGE}', headers=headers)
     string_data = response.content.decode("utf-8")
 
-
-
     total_issues = get_total_issues(f'project={project_id}', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_blocker = get_total_issues(f'project={project_id} AND severity="blocker"', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_critical = get_total_issues(f'project={project_id} AND severity="critical"', headers, BASE_URL, NO_RESULT_SEARCH)
@@ -83,9 +80,11 @@ def jira_jql(project_id):
     total_issues_in_progress = get_total_issues(f'project={project_id} AND status="in progress"', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_customer_approval = get_total_issues(f'project={project_id} AND status="customer approval"', headers, BASE_URL, NO_RESULT_SEARCH)
 
-
     json_data = json.loads(string_data)
-    project_name = json_data['issues'][0]['fields']['project']['name']
+    project_name = 'Error No Issues Found'
+    
+    if json_data['issues']:
+        project_name = json_data['issues'][0]['fields']['project']['name']
 
 
     res = {
@@ -106,7 +105,7 @@ def jira_jql(project_id):
 
 
     # Return the response
-    print(project_name)
+    # print(json_data['issues'][0])
     return make_response(res, 200)
     
 
