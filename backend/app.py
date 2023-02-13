@@ -75,6 +75,7 @@ def jira_jql(project_id):
     total_issues_critical = get_total_issues(f'project={project_id} AND severity="critical"', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_major = get_total_issues(f'project={project_id} AND severity="major"', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_minor = get_total_issues(f'project={project_id} AND severity="minor"', headers, BASE_URL, NO_RESULT_SEARCH)
+    total_issues_cosmetic = get_total_issues(f'project={project_id} AND severity="cosmetic"', headers, BASE_URL, NO_RESULT_SEARCH)
 
     total_issues_open = get_total_issues(f'project={project_id} AND status="open"', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_closed = get_total_issues(f'project={project_id} AND status="closed"', headers, BASE_URL, NO_RESULT_SEARCH)
@@ -82,6 +83,9 @@ def jira_jql(project_id):
     total_issues_in_progress = get_total_issues(f'project={project_id} AND status="in progress"', headers, BASE_URL, NO_RESULT_SEARCH)
     total_issues_customer_approval = get_total_issues(f'project={project_id} AND status="customer approval"', headers, BASE_URL, NO_RESULT_SEARCH)
 
+
+    json_data = json.loads(string_data)
+    project_name = json_data['issues'][0]['fields']['project']['name']
 
 
     res = {
@@ -91,16 +95,18 @@ def jira_jql(project_id):
         "total_critical" : total_issues_critical,
         "total_major" : total_issues_major,
         "total_minor" : total_issues_minor,
+        "total_cosmetic" : total_issues_cosmetic,
         "total_open" : total_issues_open,
         "total_closed" : total_issues_closed,
         "total_reopened" : total_issues_reopened,
         "total_in_progress" : total_issues_in_progress,
         "total_customer_approval" : total_issues_customer_approval,
+        "project_name" : project_name,
     }
 
 
     # Return the response
-    print(total_issues_blocker)
+    print(project_name)
     return make_response(res, 200)
     
 
